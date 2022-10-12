@@ -44,7 +44,7 @@ public class Experiments implements PlugIn{
 		
 		// Brain test
 		PolarTransformer transformer = new PolarTransformer();
-		ImagePlus polar = transformer.ztoPolar(in,new Point3D(225,225,4), 2);
+		ImagePlus polar = transformer.ztoPolar(in,new Point3D(225,225,200), 1);
 		//ImagePlus polar = transformer.toPolar(in);
 		polar.show();
 		

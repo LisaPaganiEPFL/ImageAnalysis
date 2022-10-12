@@ -15,7 +15,7 @@ public class PolarTransformer implements PlugIn {
 
 	}
 
-	public ImagePlus ztoPolar(ImagePlus impCart, Point3D targetCenter, int step) {
+	public ImagePlus ztoPolar(ImagePlus impCart, Point3D targetCenter, double step) {
 
 		// Establish the default centre of Cartesian space
 		// Point3D center = zgetPolarCenter(impCart, step);
@@ -36,7 +36,7 @@ public class PolarTransformer implements PlugIn {
 
 		int nx = impCart.getWidth() / 2;
 		int ny = impCart.getHeight() / 2;
-		int nz = step * impCart.getNSlices() / 2;
+		int nz = (int) (step * impCart.getNSlices() / 2);
 		double xDist = Math.abs(targetCenter.x - nx) + nx;
 		double yDist = Math.abs(targetCenter.y - ny) + ny;
 		double zDist = Math.abs(targetCenter.z * step - nz) + nz;
@@ -52,7 +52,7 @@ public class PolarTransformer implements PlugIn {
 		// Fill the Polar Grid
 		IJ.showStatus("Calculating...");
 		for (int t = 1; t <= nt; t++) {
-			for (int r = 0; r < zTransform; r++) {
+			for (int r = 1; r <= zTransform; r++) {
 	
 				impTransform.setPositionWithoutUpdate(1, r + 1, t);
 				// impTransform.setPosition(1, r + 1, 1);
@@ -211,7 +211,7 @@ public class PolarTransformer implements PlugIn {
 		return c;
 	}
 
-	Point3D zgetPolarCenter(ImagePlus impCart, int step) {
+	Point3D zgetPolarCenter(ImagePlus impCart, double step) {
 		// Get image dimensions
 		int nx = impCart.getWidth();
 		int ny = impCart.getHeight();
@@ -220,7 +220,7 @@ public class PolarTransformer implements PlugIn {
 		// Determine the centre coordinates
 		int centerX = nx / 2;
 		int centerY = ny / 2;
-		int centerZ = nz * step / 2;
+		int centerZ = (int) (nz * step / 2);
 
 		// Return the centre as Point3D
 		return new Point3D(centerX, centerY, centerZ);
@@ -241,7 +241,7 @@ public class PolarTransformer implements PlugIn {
 		return new Point3D(centerX, centerY, centerZ);
 	}
 
-	Point3D zgetCartesian(double r, double alpha, double beta, int step) {
+	Point3D zgetCartesian(double r, double alpha, double beta, double step) {
 
 		double x = r * Math.cos(alpha) * Math.sin(beta);
 		double y = r * Math.sin(alpha) * Math.sin(beta);

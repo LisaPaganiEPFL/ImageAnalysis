@@ -11,6 +11,7 @@ public class GenerateVolume implements PlugIn {
 		new ImageJ();
 		GenerateVolume generator = new GenerateVolume();
 		ImagePlus zSphere = generator.zSphere(101, 30, 2);
+		zSphere.getProcessor().resetMinAndMax();
 		zSphere.show();
 
 	}
@@ -166,14 +167,14 @@ public class GenerateVolume implements PlugIn {
 		return impSphere;
 	}
 	
-	public ImagePlus zSphere(int size, double radius, int step) {
+	public ImagePlus zSphere(int size, double radius, double step) {
 
 		int nc = 1;
 		int nt = 1;
 
 		int center = size / 2;
 		
-		int zDimension = size/step;
+		int zDimension = (int) (size/step);
 		
 		if(step == 1) {
 			zDimension = size;
@@ -191,7 +192,7 @@ public class GenerateVolume implements PlugIn {
 					for (int x = 0; x < size; x++) {
 						for (int y = 0; y < size; y++) {
 							
-							double r = getRadius(x,y,z*step,center);
+							double r = getRadius(x,y,(int)(z*step),center);
 							if(r<=radius) {
 								ipSphere.putPixelValue(x, y, 1);
 							}
@@ -267,11 +268,11 @@ public class GenerateVolume implements PlugIn {
 		return 1 / (1 + Math.exp(r - radius));
 	}
 
-	double getRadius(int x, int y, int z, int center) {
+	double getRadius(int x, int y, int d, int center) {
 		
 		int xx = x-center;
 		int yy = y-center;
-		int zz = z-center;
+		int zz = d-center;
 		
 		return Math.sqrt(xx * xx + yy * yy + zz * zz);
 	}
