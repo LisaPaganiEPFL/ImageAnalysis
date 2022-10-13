@@ -21,13 +21,22 @@ public class Experiments implements PlugIn{
 		polar.show();
 		*/
 		
-		
-		GenerateVolume generator = new GenerateVolume();
+		// Non centred target
+		/*GenerateVolume generator = new GenerateVolume();
 		ImagePlus volume = generator.fullCube(79);
 		volume.show();
 		PolarTransformer transformer = new PolarTransformer();
 		ImagePlus polar = transformer.ztoPolar(volume,new Point3D(11,17,23), 1);
+		polar.show();*/
+		
+		GenerateVolume generator = new GenerateVolume();
+		ImagePlus impVolume = generator.fullCube(79);
+		impVolume.show();
+		Volume volume = new Volume(impVolume);
+		PolarTransformer transformer = new PolarTransformer();
+		ImagePlus polar = transformer.fastToPolar(volume,new Point3D(11,17,23), 1);
 		polar.show();
+		
 		
 	}
 
@@ -43,9 +52,14 @@ public class Experiments implements PlugIn{
 		ImagePlus in = IJ.getImage();
 		
 		// Brain test
-		PolarTransformer transformer = new PolarTransformer();
-		ImagePlus polar = transformer.ztoPolar(in,new Point3D(225,225,200), 1);
+		//PolarTransformer transformer = new PolarTransformer();
+		//ImagePlus polar = transformer.ztoPolar(in,new Point3D(225,225,200), 1);
 		//ImagePlus polar = transformer.toPolar(in);
+		//polar.show();
+		
+		PolarTransformer transformer = new PolarTransformer();
+		Volume volume = new Volume(in);
+		ImagePlus polar = transformer.fastToPolar(volume, new Point3D(225,225,200), 1);
 		polar.show();
 		
 	}

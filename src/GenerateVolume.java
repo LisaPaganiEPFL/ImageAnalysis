@@ -34,8 +34,8 @@ public class GenerateVolume implements PlugIn {
 		smoothSphere.show();
 		
 		PolarTransformer transformer = new PolarTransformer();
-		ImagePlus polar = transformer.toPolar(fullCube);
-		polar.show();
+		//ImagePlus polar = transformer.toPolar(fullCube);
+		//polar.show();
 	}
 
 	public ImagePlus fullCube(int size) {

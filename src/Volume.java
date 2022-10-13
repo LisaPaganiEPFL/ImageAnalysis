@@ -7,7 +7,7 @@ import ij.process.ImageProcessor;
 public class Volume implements PlugIn {
 
 	public double[] image;
-	public int nx, ny, nz;
+	public int nx, ny, nz, nt;
 
 	public static void main(String arg[]) {
 
@@ -26,6 +26,7 @@ public class Volume implements PlugIn {
 		nx = imp.getWidth();
 		ny = imp.getHeight();
 		nz = imp.getNSlices();
+		nt = imp.getFrame();
 
 		image = new double[nx * ny * nz];
 
@@ -35,7 +36,7 @@ public class Volume implements PlugIn {
 			for (int y = 0; y < ny; y++) {
 				for (int x = 0; x < nx; x++) {
 					double v = ip.getPixelValue(x, y);
-					image[x + y*nx + z*nx*ny] = v;
+					image[x + y*nx + (z-1)*nx*ny] = v;
 				}
 			}
 		}
@@ -66,7 +67,13 @@ public class Volume implements PlugIn {
 
 	public double getPixel(int x, int y, int z) {
 
-		return image[x+y*nx + z*nx*ny];
+		int idx = x+y*nx + z*nx*ny;
+		
+		if(idx>=nx*ny*nz || idx < 0) {
+			return 0;
+		}else {
+			return image[idx];
+		}
 	}
 	
 	public double getInterpolatedPixel(double x, double y, double z) {
