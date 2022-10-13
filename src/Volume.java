@@ -64,6 +64,37 @@ public class Volume implements PlugIn {
 		
 		return imp;
 	}
+	
+	public Point3D getCenterMass() {
+		
+		double sum = 0;
+		double sumX = 0;
+		double sumY = 0;
+		double sumZ = 0;
+		
+		for (int z = 0; z < nz; z++) {
+			for (int y = 0; y < ny; y++) {
+				for (int x = 0; x < nx; x++) {
+						
+					sum += image[x + y*nx + z*nx*ny];
+					sumX += x*image[x + y*nx + z*nx*ny];
+					sumY += y*image[x + y*nx + z*nx*ny];
+					sumZ += z*image[x + y*nx + z*nx*ny];
+
+				}
+			}
+	
+		}
+		
+		int x = (int) (sumX/sum);
+		int y = (int) (sumY/sum);
+		int z = (int) (sumZ/sum);
+		
+		Point3D centerMass = new Point3D(x,y,z);
+		
+		
+		return centerMass;
+	}
 
 	public double getPixel(int x, int y, int z) {
 

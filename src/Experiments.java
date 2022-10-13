@@ -34,7 +34,7 @@ public class Experiments implements PlugIn{
 		impVolume.show();
 		Volume volume = new Volume(impVolume);
 		PolarTransformer transformer = new PolarTransformer();
-		ImagePlus polar = transformer.fastToPolar(volume,new Point3D(11,17,23), 1);
+		ImagePlus polar = transformer.fastToPolar(volume,new Point3D(11,17,23), 1, false);
 		polar.show();
 		
 		
@@ -59,7 +59,7 @@ public class Experiments implements PlugIn{
 		
 		PolarTransformer transformer = new PolarTransformer();
 		Volume volume = new Volume(in);
-		ImagePlus polar = transformer.fastToPolar(volume, new Point3D(225,225,200), 1);
+		ImagePlus polar = transformer.fastToPolar(volume, new Point3D(225,225,200), 1, true);
 		polar.show();
 		
 	}

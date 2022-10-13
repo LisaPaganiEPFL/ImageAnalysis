@@ -15,8 +15,12 @@ public class PolarTransformer implements PlugIn {
 
 	}
 	
-	public ImagePlus fastToPolar(Volume volume, Point3D targetCenter, double step) {
+	public ImagePlus fastToPolar(Volume volume, Point3D targetCenter, double step, boolean detect) {
 
+		if (detect == true) {
+			
+			targetCenter = volume.getCenterMass();
+		}
 		// Set up the Polar Grid:
 		// Use x values for alpha
 		// Use y values for beta
