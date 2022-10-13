@@ -57,9 +57,9 @@ public class GenerateVolume implements PlugIn {
 					for (int x = 0; x < size; x++) {
 						for (int y = 0; y < size; y++) {
 							
-							double r = getRadius(x,y,z,center);
+							//double r = getRadius(x,y,z,center);
 
-							ipCube.putPixelValue(x, y, r);
+							ipCube.putPixelValue(x, y, 1);
 
 						}
 					}
@@ -70,6 +70,8 @@ public class GenerateVolume implements PlugIn {
 		return impCube;
 	
 	}
+	
+	
 	
 	public ImagePlus cube(int size, double dist) {
 
@@ -133,6 +135,40 @@ public class GenerateVolume implements PlugIn {
 		return impSmoothCube;
 	}
 	
+	public ImagePlus nonCentredSphere(int size, double radius) {
+
+		int nc = 1;
+		int nt = 1;
+
+		int center = size / 3;
+
+		ImagePlus impSphere = IJ.createHyperStack("synthetic sphere", size, size, nc, size, nt, 32);
+
+		for (int c = 1; c <= nc; c++) {
+			for (int z = 1; z <= size; z++) {
+				for (int t = 1; t <= nt; t++) {
+
+					impSphere.setPositionWithoutUpdate(c, z, t);
+					ImageProcessor ipSphere = impSphere.getProcessor();
+
+					for (int x = 0; x < size; x++) {
+						for (int y = 0; y < size; y++) {
+							
+							double r = getRadius(x,y,z,center);
+							if(r<=radius) {
+								ipSphere.putPixelValue(x, y, 1);
+							}
+							
+
+						}
+					}
+				}
+			}
+		}
+
+		return impSphere;
+	}
+	
 	public ImagePlus sphere(int size, double radius) {
 
 		int nc = 1;
@@ -153,7 +189,7 @@ public class GenerateVolume implements PlugIn {
 						for (int y = 0; y < size; y++) {
 							
 							double r = getRadius(x,y,z,center);
-							if(r<=radius) {
+							if(r<=radius && r>= radius-4) {
 								ipSphere.putPixelValue(x, y, 1);
 							}
 							
