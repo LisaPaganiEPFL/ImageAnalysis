@@ -30,8 +30,8 @@ public class Experiments implements PlugIn{
 		polar.show();*/
 		
 		GenerateVolume generator = new GenerateVolume();
-		//ImagePlus impVolume = generator.nonCentredSphere(101, 10);
-		ImagePlus impVolume = generator.sphere(101, 20);
+		ImagePlus impVolume = generator.nonCentredSphere(101, 10);
+		//ImagePlus impVolume = generator.sphere(101, 20);
 		impVolume.show();
 		Volume volume = new Volume(impVolume);
 		PolarTransformer transformer = new PolarTransformer();

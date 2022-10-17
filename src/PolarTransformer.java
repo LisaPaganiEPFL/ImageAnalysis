@@ -19,7 +19,7 @@ public class PolarTransformer implements PlugIn {
 
 		if (detect == true) {
 
-			targetCenter = volume.getCenterMass();
+			targetCenter = volume.getCenterMass(0,0);
 			
 		}
 		// Set up the Polar Grid:
@@ -34,46 +34,52 @@ public class PolarTransformer implements PlugIn {
 		int yTransform = 181;
 
 		// Distance from centre to the farthest corner
-		double radiusMass = volume.getRadiusMass(targetCenter);
+		double radiusMass = volume.getRadiusMass(targetCenter,0,0);
 		//int radiusInt = getRadius(volume, targetCenter, step);
 		//int zTransform = radiusInt + 5;
 		int zTransform = 30;
 
 		int shell = (int) (radiusMass-15);
 
-		int nt = volume.nt;
 
 		// -- Create the new image
-		ImagePlus impTransform = IJ.createHyperStack("synthetic volume", xTransform, yTransform, 1, zTransform, nt, 32);
+		ImagePlus impTransform = IJ.createHyperStack("synthetic volume", xTransform, yTransform, volume.nc, zTransform, volume.nt, 32);
 
 		// Fill the Polar Grid
 		IJ.showStatus("Calculating...");
-		for (int t = 1; t <= nt; t++) {
-			for (int r = 1; r <= zTransform; r++) {
-
-				impTransform.setPositionWithoutUpdate(1, r + 1 +shell, t);
-				ImageProcessor ipTransform = impTransform.getProcessor();
-
-				for (int betaInt = 0; betaInt < yTransform; betaInt++) {
-					for (int alphaInt = 0; alphaInt < xTransform; alphaInt++) {
-
-						// For each polar pixel, need to convert it to Cartesian coordinates
-						double alpha = (alphaInt / 360.0) * Math.PI * 2.0;
-						double beta = (betaInt / 360.0) * Math.PI * 2.0;
-
-						double newValue = getInterpolatedValue(volume, targetCenter, r+shell, alpha, beta, step);
-
-						ipTransform.putPixelValue(alphaInt, betaInt, newValue);
-
+		for (int c = 1; c <= volume.nc; c++) {
+			for (int t = 1; t <= volume.nt; t++) {
+				for (int r = 1; r <= zTransform; r++) {
+	
+					impTransform.setPositionWithoutUpdate(c, r + 1 +shell, t);
+					ImageProcessor ipTransform = impTransform.getProcessor();
+	
+					for (int betaInt = 0; betaInt < yTransform; betaInt++) {
+						for (int alphaInt = 0; alphaInt < xTransform; alphaInt++) {
+	
+							// For each polar pixel, need to convert it to Cartesian coordinates
+							double alpha = (alphaInt / 360.0) * Math.PI * 2.0;
+							double beta = (betaInt / 360.0) * Math.PI * 2.0;
+							
+							if (detect == true) {
+								targetCenter = volume.getCenterMass(t-1,c-1);
+							}
+	
+							double newValue = getInterpolatedValue(volume, targetCenter, r+shell, alpha, beta, step, t-1, c-1);
+	
+							ipTransform.putPixelValue(alphaInt, betaInt, newValue);
+	
+						}
+	
 					}
-
 				}
 			}
 		}
+		
 		return impTransform;
 	}
 
-	double getInterpolatedValue(Volume volume, Point3D targetCenter, double r, double alpha, double beta, double step) {
+	double getInterpolatedValue(Volume volume, Point3D targetCenter, double r, double alpha, double beta, double step, int t, int c) {
 
 		double x = r * Math.cos(alpha) * Math.sin(beta);
 		double y = r * Math.sin(alpha) * Math.sin(beta);
@@ -85,7 +91,7 @@ public class PolarTransformer implements PlugIn {
 		z = z + targetCenter.z;
 
 		// Linear interpolation
-		return volume.getInterpolatedPixel(x, y, z);
+		return volume.getInterpolatedPixel(x, y, z, t, c);
 	}
 
 	int getRadius(Volume volume, Point3D targetCenter, double step) {
