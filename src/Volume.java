@@ -26,7 +26,7 @@ public class Volume implements PlugIn {
 		nx = imp.getWidth();
 		ny = imp.getHeight();
 		nz = imp.getNSlices();
-		nt = imp.getFrame();
+		nt = imp.getNFrames();
 		nc = imp.getNChannels();
 
 		image = new double[nx * ny * nz * nt * nc];

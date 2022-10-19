@@ -13,26 +13,26 @@ public class Experiments implements PlugIn{
 		
 		// Non centred target
 		
-		GenerateVolume generator = new GenerateVolume();
+		/*GenerateVolume generator = new GenerateVolume();
 		ImagePlus impVolume = generator.nonCentredSphere(101, 10);
 		//ImagePlus impVolume = generator.sphere(101, 20);
 		impVolume.show();
 		VolumeA volume = new VolumeA(impVolume);
 		PolarTransformerA transformer = new PolarTransformerA();
 		ImagePlus polar = transformer.fastToPolar(volume,new Point3D(40,40,40), 1, true);
-		polar.show();
+		polar.show();*/
 		
 		
 		// Shell centred
 		
-		/*GenerateVolume generator = new GenerateVolume();
+		GenerateVolume generator = new GenerateVolume();
 		ImagePlus impVolume = generator.sphere(101, 20);
 		//ImagePlus impVolume = generator.sphere(101, 20);
 		impVolume.show();
 		VolumeA volume = new VolumeA(impVolume);
 		PolarTransformerA transformer = new PolarTransformerA();
 		ImagePlus polar = transformer.fastToPolar(volume,new Point3D(40,40,40), 1, true);
-		polar.show();*/
+		polar.show();
 		
 		
 	}
@@ -60,8 +60,8 @@ public class Experiments implements PlugIn{
 		//polar.getProcessor().resetMinAndMax();
 		polar.show();*/
 		
-		PolarTransformerA transformer = new PolarTransformerA();
-		VolumeA volume = new VolumeA(in);
+		PolarTransformer transformer = new PolarTransformer();
+		Volume volume = new Volume(in);
 		ImagePlus polar = transformer.fastToPolar(volume, new Point3D(225,225,200), 1, true);
 		polar.getProcessor().resetMinAndMax();
 		polar.show();

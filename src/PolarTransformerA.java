@@ -34,12 +34,12 @@ public class PolarTransformerA implements PlugIn {
 		int yTransform = 181;
 
 		// Distance from centre to the farthest corner
-		//double radiusMass = volume.getRadiusMass(targetCenter);
-		int radiusInt = getRadius(volume, targetCenter, step);
-		int zTransform = radiusInt + 5;
-		//int zTransform = 30;
+		double radiusMass = volume.getRadiusMass(targetCenter);
+		//int radiusInt = getRadius(volume, targetCenter, step);
+		//int zTransform = radiusInt + 5;
+		int zTransform = 30;
 
-		//int shell = (int) (radiusMass-15);
+		int shell = (int) (radiusMass-15);
 
 
 		// -- Create the new image
@@ -50,7 +50,7 @@ public class PolarTransformerA implements PlugIn {
 	
 				for (int r = 1; r <= zTransform; r++) {
 	
-					impTransform.setPositionWithoutUpdate(1, r + 1 /*+shell*/, 1);
+					impTransform.setPositionWithoutUpdate(1, r + 1 +shell, 1);
 					ImageProcessor ipTransform = impTransform.getProcessor();
 	
 					for (int betaInt = 0; betaInt < yTransform; betaInt++) {

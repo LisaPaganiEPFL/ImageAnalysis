@@ -48,7 +48,9 @@ public class PolarTransformer implements PlugIn {
 		// Fill the Polar Grid
 		IJ.showStatus("Calculating...");
 		for (int c = 1; c <= volume.nc; c++) {
+			IJ.log("c=" + c);
 			for (int t = 1; t <= volume.nt; t++) {
+				IJ.log("t=" + t);
 				for (int r = 1; r <= zTransform; r++) {
 	
 					impTransform.setPositionWithoutUpdate(c, r + 1 /*+shell*/, t);
@@ -61,9 +63,9 @@ public class PolarTransformer implements PlugIn {
 							double alpha = (alphaInt / 360.0) * Math.PI * 2.0;
 							double beta = (betaInt / 360.0) * Math.PI * 2.0;
 							
-							if (detect == true) {
+							/*if (detect == true) {
 								targetCenter = volume.getCenterMass(t-1,c-1);
-							}
+							}*/
 	
 							double newValue = getInterpolatedValue(volume, targetCenter, r/*+shell*/, alpha, beta, step, t-1, c-1);
 	
