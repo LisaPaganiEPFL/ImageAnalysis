@@ -29,10 +29,11 @@ public class Experiments implements PlugIn{
 		ImagePlus impVolume = generator.sphere(101, 20);
 		//ImagePlus impVolume = generator.sphere(101, 20);
 		impVolume.show();
-		VolumeA volume = new VolumeA(impVolume);
-		PolarTransformerA transformer = new PolarTransformerA();
-		ImagePlus polar = transformer.fastToPolar(volume,new Point3D(40,40,40), 1, true);
-		polar.show();
+		Volume volume = new Volume(impVolume);
+		PolarTransformer transformer = new PolarTransformer();
+		transformer.getNormal(volume, volume.getCenterMass(0, 0), 0, 0, 1, 0.8);
+		//ImagePlus polar = transformer.fastToPolar(volume,new Point3D(40,40,40), 1, true);
+		//polar.show();
 		
 		
 	}

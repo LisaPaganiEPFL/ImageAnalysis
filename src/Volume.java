@@ -187,5 +187,36 @@ public class Volume implements PlugIn {
 
 		return result;
 	}
+	
+	
+	public double[] getDerivatives(Point3D centerMass,int r, double alpha, double beta,int t, int c, double step) {
+		
+		double xx = r * Math.cos(alpha) * Math.sin(beta);
+		double yy = r * Math.sin(alpha) * Math.sin(beta);
+		double zz = r * Math.cos(beta) / step;
+
+		// Add target centre
+		int x = (int) (xx + centerMass.x);
+		int y = (int) (yy + centerMass.y);
+		int z = (int) (zz + centerMass.z);
+
+		
+		double dx = getPixel(x+1, y, z, t, c) - getPixel(x-1, y, z, t, c);
+		double dy = getPixel(x, y+1, z, t, c) - getPixel(x, y-1, z, t, c);
+		double dz = getPixel(x, y, z+1, t, c) - getPixel(x-1, y, z-1, t, c);
+		
+		double[] derivative = new double[3];
+		
+		derivative[0] = dx;
+		derivative[1] = dy;
+		derivative[2] = dz;
+		
+		if(alpha == 0 && beta == Math.PI) {
+			IJ.log("x"+x+"y"+y+"z"+z+"dx"+dx+"dy"+dy+"dz"+dz);
+		}
+		
+		return derivative;
+	}
+	
 
 }

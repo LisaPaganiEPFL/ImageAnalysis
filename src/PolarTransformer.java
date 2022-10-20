@@ -80,6 +80,28 @@ public class PolarTransformer implements PlugIn {
 		
 		return impTransform;
 	}
+	
+	public void getNormal(Volume volume,Point3D targetCenter,int t, int c, double step, double threshold) {
+
+		for (int betaInt = 0; betaInt < 181; betaInt++) {
+			for (int alphaInt = 0; alphaInt < 360; alphaInt++) {
+				boolean stop = false;
+				double alpha = (alphaInt / 360.0) * Math.PI * 2.0;
+				double beta = (betaInt / 360.0) * Math.PI * 2.0;
+				for (int r = 1; r <= 100; r++) {
+					if(stop == false) {
+						double newValue = getInterpolatedValue(volume, targetCenter,r, alpha, beta, step, t, c);
+						if(newValue > threshold){
+							stop = true;
+							double[] d = volume.getDerivatives(targetCenter, r, alpha, beta, t, c, step);
+						}
+					}
+				}
+				
+			}
+		}
+		
+	}
 
 	double getInterpolatedValue(Volume volume, Point3D targetCenter, double r, double alpha, double beta, double step, int t, int c) {
 
