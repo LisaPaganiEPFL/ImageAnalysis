@@ -39,8 +39,7 @@ public class Volume implements PlugIn {
 					for (int y = 0; y < ny; y++) {
 						for (int x = 0; x < nx; x++) {
 							double v = ip.getPixelValue(x, y);
-							image[x + y * nx + (z - 1) * nx * ny + (t - 1) * nx * ny * nz
-									+ (c - 1) * nx * ny * nz * nt] = v;
+							image[x + nx * (y + ny * ((z - 1) + nz * ((t - 1) + (c - 1) * nt)))] = v;
 						}
 					}
 				}
@@ -61,8 +60,7 @@ public class Volume implements PlugIn {
 					for (int x = 0; x < nx; x++) {
 						for (int y = 0; y < ny; y++) {
 
-							ip.putPixelValue(x, y, image[x + y * nx + (z - 1) * nx * ny + (t - 1) * nx * ny * nz
-									+ (c - 1) * nx * ny * nz * nt]);
+							ip.putPixelValue(x, y, image[x + nx * (y + ny * ((z - 1) + nz * ((t - 1) + (c - 1) * nt)))]);
 
 						}
 					}
@@ -85,10 +83,10 @@ public class Volume implements PlugIn {
 			for (int y = 0; y < ny; y++) {
 				for (int x = 0; x < nx; x++) {
 
-					sum += image[x + y * nx + z * nx * ny + t * nx * ny * nz + c * nx * ny * nz * nt];
-					sumX += x * image[x + y * nx + z * nx * ny + t * nx * ny * nz + c * nx * ny * nz * nt];
-					sumY += y * image[x + y * nx + z * nx * ny + t * nx * ny * nz + c * nx * ny * nz * nt];
-					sumZ += z * image[x + y * nx + z * nx * ny + t * nx * ny * nz + c * nx * ny * nz * nt];
+					sum += image[x + nx * (y + ny * (z + nz * (t + c * nt)))];
+					sumX += x * image[x + nx * (y + ny * (z + nz * (t + c * nt)))];
+					sumY += y * image[x + nx * (y + ny * (z + nz * (t + c * nt)))];
+					sumZ += z * image[x + nx * (y + ny * (z + nz * (t + c * nt)))];
 
 				}
 			}
@@ -123,8 +121,8 @@ public class Volume implements PlugIn {
 
 					double r = Math.sqrt(xx * xx + yy * yy + zz * zz);
 
-					sum += image[x + y * nx + z * nx * ny + t * nx * ny * nz + c * nx * ny * nz * nt];
-					sumR += r * image[x + y * nx + z * nx * ny + t * nx * ny * nz + c * nx * ny * nz * nt];
+					sum += image[x + nx * (y + ny * (z + nz * (t + c * nt)))];
+					sumR += r * image[x + nx * (y + ny * (z + nz * (t + c * nt)))];
 
 				}
 			}
@@ -141,11 +139,11 @@ public class Volume implements PlugIn {
 
 		int idx = x + y * nx + z * nx * ny + t * nx * ny * nz + c * nx * ny * nz * nt;
 
-		if (x >= nx || y >= ny || z >= nz || t >= nt || c >= nc || x < 0 || y < 0 || z < 0 || t < 0 || c < 0) {
-			return 0;
-		} else {
-			return image[idx];
-		}
+		//if (x >= nx || y >= ny || z >= nz || t >= nt || c >= nc || x < 0 || y < 0 || z < 0 || t < 0 || c < 0) {
+			//return 0;
+		//} else {
+		return image[idx];
+		//}
 	}
 
 	public double getInterpolatedPixel(double x, double y, double z, int t, int c) {
@@ -153,24 +151,24 @@ public class Volume implements PlugIn {
 		int xFloor = (int) Math.floor(x);
 		int yFloor = (int) Math.floor(y);
 		int zFloor = (int) Math.floor(z);
-
-		int xCeil = (int) Math.ceil(x);
-		int yCeil = (int) Math.ceil(y);
-		int zCeil = (int) Math.ceil(z);
+		
+		if ((xFloor+1) >= nx || (yFloor+1) >= ny || (zFloor+1) >= nz || t >= nt || c >= nc || xFloor < 0 || yFloor < 0 || zFloor < 0 || t < 0 || c < 0) {
+			return 0;
+		}
 
 		double xD = x - xFloor;
 		double yD = y - yFloor;
 		double zD = z - zFloor;
 
 		double c000 = getPixel(xFloor, yFloor, zFloor, t, c);
-		double c100 = getPixel(xCeil, yFloor, zFloor, t, c);
-		double c010 = getPixel(xFloor, yCeil, zFloor, t, c);
-		double c110 = getPixel(xCeil, yCeil, zFloor, t, c);
+		double c100 = getPixel(xFloor + 1, yFloor, zFloor, t, c);
+		double c010 = getPixel(xFloor, yFloor + 1, zFloor, t, c);
+		double c110 = getPixel(xFloor + 1, yFloor + 1, zFloor, t, c);
 
-		double c001 = getPixel(xFloor, yFloor, zCeil, t, c);
-		double c101 = getPixel(xCeil, yFloor, zCeil, t, c);
-		double c011 = getPixel(xFloor, yCeil, zCeil, t, c);
-		double c111 = getPixel(xCeil, yCeil, zCeil, t, c);
+		double c001 = getPixel(xFloor, yFloor, zFloor + 1, t, c);
+		double c101 = getPixel(xFloor + 1, yFloor, zFloor + 1, t, c);
+		double c011 = getPixel(xFloor, yFloor + 1, zFloor + 1, t, c);
+		double c111 = getPixel(xFloor + 1, yFloor + 1, zFloor + 1, t, c);
 
 		// Interpolate along x axis
 		double c00 = c000 * (1 - xD) + c100 * xD;
@@ -187,10 +185,9 @@ public class Volume implements PlugIn {
 
 		return result;
 	}
-	
-	
-	public double[] getDerivatives(Point3D centerMass,int r, double alpha, double beta,int t, int c, double step) {
-		
+
+	public double[] getDerivatives(Point3D centerMass, int r, double alpha, double beta, int t, int c, double step) {
+
 		double xx = r * Math.cos(alpha) * Math.sin(beta);
 		double yy = r * Math.sin(alpha) * Math.sin(beta);
 		double zz = r * Math.cos(beta) / step;
@@ -200,23 +197,21 @@ public class Volume implements PlugIn {
 		int y = (int) (yy + centerMass.y);
 		int z = (int) (zz + centerMass.z);
 
-		
-		double dx = getPixel(x+1, y, z, t, c) - getPixel(x-1, y, z, t, c);
-		double dy = getPixel(x, y+1, z, t, c) - getPixel(x, y-1, z, t, c);
-		double dz = getPixel(x, y, z+1, t, c) - getPixel(x-1, y, z-1, t, c);
-		
+		double dx = getPixel(x + 1, y, z, t, c) - getPixel(x - 1, y, z, t, c);
+		double dy = getPixel(x, y + 1, z, t, c) - getPixel(x, y - 1, z, t, c);
+		double dz = getPixel(x, y, z + 1, t, c) - getPixel(x - 1, y, z - 1, t, c);
+
 		double[] derivative = new double[3];
-		
+
 		derivative[0] = dx;
 		derivative[1] = dy;
 		derivative[2] = dz;
-		
-		if(alpha == 0 && beta == Math.PI) {
-			IJ.log("x"+x+"y"+y+"z"+z+"dx"+dx+"dy"+dy+"dz"+dz);
+
+		if (alpha == 0 && beta == Math.PI) {
+			IJ.log("x" + x + "y" + y + "z" + z + "dx" + dx + "dy" + dy + "dz" + dz);
 		}
-		
+
 		return derivative;
 	}
-	
 
 }
