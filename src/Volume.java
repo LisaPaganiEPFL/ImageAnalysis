@@ -199,7 +199,7 @@ public class Volume implements PlugIn {
 
 		double dx = getPixel(x + 1, y, z, t, c) - getPixel(x - 1, y, z, t, c);
 		double dy = getPixel(x, y + 1, z, t, c) - getPixel(x, y - 1, z, t, c);
-		double dz = getPixel(x, y, z + 1, t, c) - getPixel(x - 1, y, z - 1, t, c);
+		double dz = getPixel(x, y, z + 1, t, c) - getPixel(x, y, z - 1, t, c);
 
 		double[] derivative = new double[3];
 
@@ -207,9 +207,9 @@ public class Volume implements PlugIn {
 		derivative[1] = dy;
 		derivative[2] = dz;
 
-		if (alpha == 0 && beta == Math.PI) {
-			IJ.log("x" + x + "y" + y + "z" + z + "dx" + dx + "dy" + dy + "dz" + dz);
-		}
+		//if (alpha == 0 && beta == Math.PI) {
+		IJ.log("x" + x + "y" + y + "z" + z + "dx" + dx + "dy" + dy + "dz" + dz);
+		//}
 
 		return derivative;
 	}

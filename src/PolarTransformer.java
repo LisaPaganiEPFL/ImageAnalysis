@@ -1,6 +1,7 @@
 import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.PlugIn;
+import ij.plugin.filter.RankFilters;
 import ij.process.ImageProcessor;
 
 public class PolarTransformer implements PlugIn {
@@ -17,6 +18,7 @@ public class PolarTransformer implements PlugIn {
 
 	public ImagePlus fastToPolar(Volume volume, Point3D targetCenter, double step, boolean detect) {
 
+		//RankFilter
 		if (detect == true) {
 
 			targetCenter = volume.getCenterMass(0,0);
@@ -91,7 +93,7 @@ public class PolarTransformer implements PlugIn {
 				for (int r = 1; r <= 100; r++) {
 					if(stop == false) {
 						double newValue = getInterpolatedValue(volume, targetCenter,r, alpha, beta, step, t, c);
-						if(newValue > threshold){
+						if(newValue <= threshold){
 							stop = true;
 							double[] d = volume.getDerivatives(targetCenter, r, alpha, beta, t, c, step);
 						}
@@ -100,6 +102,93 @@ public class PolarTransformer implements PlugIn {
 				
 			}
 		}
+		
+	}
+	
+	public ImagePlus median(ImagePlus in) {	
+		
+		ImagePlus inCopy = new ImagePlus();
+		inCopy = in.duplicate();
+		RankFilters rf = new RankFilters();
+		
+		for(int t=1; t <= inCopy.getNFrames(); t++) {
+			
+			for(int z=1; z <= inCopy.getNSlices(); z++) {
+				inCopy.setPositionWithoutUpdate(1, z, t);
+				ImageProcessor ip = inCopy.getProcessor();
+				rf.rank(ip, 2, RankFilters.MEDIAN);
+			}
+		}
+		
+		
+		return inCopy;
+	}
+	
+	public ImagePlus getNomalSurfaces(Volume volume,Point3D targetCenter,int t, int c, double step, double threshold) {
+
+		ImagePlus impTransform = IJ.createHyperStack("normal volume", 360, 181, 1, 5, 1, 32);
+		
+		for (int betaInt = 0; betaInt < 181; betaInt++) {
+			double beta = (betaInt / 360.0) * Math.PI * 2.0;
+			for (int alphaInt = 0; alphaInt < 360; alphaInt++) {
+				boolean stop = false;
+				double alpha = (alphaInt / 360.0) * Math.PI * 2.0;
+				for (int r = 1; r <= 400; r++) {
+					if(stop == false) {
+						double newValue = getInterpolatedValue(volume, targetCenter,r, alpha, beta, step, t, c);
+						//IJ.log("pixel"+newValue);
+						if(newValue > threshold){
+							IJ.log("pixel"+newValue);
+							stop = true;
+							for(int rPos = 0; rPos < 5; rPos++) {
+							impTransform.setPositionWithoutUpdate(1, rPos+1, 1);
+							ImageProcessor ipTransform = impTransform.getProcessor();
+							ipTransform.putPixelValue(alphaInt, betaInt, newValue);
+							newValue = getInterpolatedValue(volume, targetCenter,r + rPos + 1, alpha, beta, step, t, c);
+							}
+							//double[] d = volume.getDerivatives(targetCenter, r, alpha, beta, t, c, step);
+						}
+					}
+				}
+				
+			}
+		}
+		
+		return impTransform;
+		
+	}
+	
+	public ImagePlus getNomalSurfacesFromExt(Volume volume,Point3D targetCenter,int t, int c, double step, double threshold) {
+
+		ImagePlus impTransform = IJ.createHyperStack("normal volume", 360, 181, 1, 5, 1, 32);
+		
+		for (int betaInt = 0; betaInt < 181; betaInt++) {
+			double beta = (betaInt / 360.0) * Math.PI * 2.0;
+			
+			for (int alphaInt = 0; alphaInt < 360; alphaInt++) {
+				//boolean stop = false;
+				double alpha = (alphaInt / 360.0) * Math.PI * 2.0;
+				for (int r = 1; r <= 300; r++) {
+				
+					double newValue = getInterpolatedValue(volume, targetCenter,r, alpha, beta, step, t, c);
+					if(newValue > threshold){
+						IJ.log("pixel"+newValue);
+
+						for(int rPos = 0; rPos < 5; rPos++) {
+						impTransform.setPositionWithoutUpdate(1, rPos+1, 1);
+						ImageProcessor ipTransform = impTransform.getProcessor();
+						ipTransform.putPixelValue(alphaInt, betaInt, newValue);
+						newValue = getInterpolatedValue(volume, targetCenter,r + rPos + 1, alpha, beta, step, t, c);
+						}
+						break;
+						}
+					
+				}
+				
+			}
+		}
+		
+		return impTransform;
 		
 	}
 
