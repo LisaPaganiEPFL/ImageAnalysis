@@ -1,6 +1,7 @@
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
+import ij.plugin.GaussianBlur3D;
 import ij.plugin.PlugIn;
 
 
@@ -48,6 +49,8 @@ public class Experiments implements PlugIn{
 		//fullCube.show();
 		
 		ImagePlus in = IJ.getImage();
+		GaussianBlur3D g = new GaussianBlur3D();
+		g.blur(in, 0, 0, 0);
 		
 		
 		/*PolarTransformer transformer = new PolarTransformer();
