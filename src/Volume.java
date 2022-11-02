@@ -208,7 +208,7 @@ public class Volume implements PlugIn {
 		derivative[2] = dz;
 
 		//if (alpha == 0 && beta == Math.PI) {
-		IJ.log("x" + x + "y" + y + "z" + z + "dx" + dx + "dy" + dy + "dz" + dz);
+		//IJ.log("x" + x + "y" + y + "z" + z + "dx" + dx + "dy" + dy + "dz" + dz);
 		//}
 
 		return derivative;

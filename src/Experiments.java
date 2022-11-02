@@ -58,18 +58,24 @@ public class Experiments implements PlugIn{
 		
 		
 		// Brain surface detected
-		/*
-		PolarTransformer transformer = new PolarTransformer();
-		Volume volume = new Volume(in);
-		ImagePlus polar = transformer.getNomalSurfaces(volume, volume.getCenterMass(0, 0), 0, 0, 1, 130);
-		//ImagePlus polar = transformer.fastToPolar(volume, new Point3D(225,225,200), 1, true);
-		//polar.getProcessor().resetMinAndMax();
-		polar.show();*/
 		
 		PolarTransformer transformer = new PolarTransformer();
 		Volume volume = new Volume(in);
+		//ImagePlus polar = transformer.getNomalSurfaces(volume, volume.getCenterMass(0, 0), 0, 0, 2.3, 6000);
+		//ImagePlus polar = transformer.getNomalSurfaces(volume, volume.getCenterMass(0, 0), 0, 0, 1, 130);
+		Volume volume1 = new Volume(in);
+		ImagePlus newPolar = transformer.getFollowNomalSurfaces(volume1, volume1.getCenterMass(0, 0), 0, 0, 1, 130);
+		//ImagePlus newPolar1 = transformer.getNomalSurfacesFromInt(volume, volume.getCenterMass(0, 0), 0, 0, 1, 130);
+			//ImagePlus polar = transformer.fastToPolar(volume, new Point3D(225,225,200), 1, true);
+			//polar.getProcessor().resetMinAndMax();
+		//polar.show();
+		newPolar.show();
+		//newPolar1.show();
+		
+		/*PolarTransformer transformer = new PolarTransformer();
+		//Volume volume = new Volume(in);
 		ImagePlus median = transformer.median(in);
-		median.show();
+		median.show();*/
 		//Volume med = new Volume(median);
 		
 		//transformer.getNomalSurfacesFromExt(med, volume.getCenterMass(0, 0), 0, 0, 2.5, 400).show();
