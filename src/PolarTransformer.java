@@ -188,6 +188,8 @@ public class PolarTransformer implements PlugIn {
 							double y = targetCenter.y + r * Math.sin(alpha) * Math.sin(beta);
 							double z = targetCenter.z + r * Math.cos(beta);
 							
+							//if check space limitation
+							
 							for(int rPos = 0; rPos < 5; rPos++) { // rNormal
 							double nValue = getInterpolatedValue(volume,x,y,z,direction,rPos, step, t, c);
 							impTransform.setPositionWithoutUpdate(1, rPos+1, 1);

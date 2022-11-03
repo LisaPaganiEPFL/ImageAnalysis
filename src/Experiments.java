@@ -49,8 +49,8 @@ public class Experiments implements PlugIn{
 		//fullCube.show();
 		
 		ImagePlus in = IJ.getImage();
-		GaussianBlur3D g = new GaussianBlur3D();
-		g.blur(in, 0, 0, 0);
+		//GaussianBlur3D g = new GaussianBlur3D();
+		//g.blur(in, 0, 0, 0);
 		
 		
 		/*PolarTransformer transformer = new PolarTransformer();
@@ -65,13 +65,13 @@ public class Experiments implements PlugIn{
 		PolarTransformer transformer = new PolarTransformer();
 		Volume volume = new Volume(in);
 		//ImagePlus polar = transformer.getNomalSurfaces(volume, volume.getCenterMass(0, 0), 0, 0, 2.3, 6000);
-		//ImagePlus polar = transformer.getNomalSurfaces(volume, volume.getCenterMass(0, 0), 0, 0, 1, 130);
+		ImagePlus polar = transformer.getNomalSurfaces(volume, volume.getCenterMass(0, 0), 0, 0, 1, 130);
 		Volume volume1 = new Volume(in);
 		ImagePlus newPolar = transformer.getFollowNomalSurfaces(volume1, volume1.getCenterMass(0, 0), 0, 0, 1, 130);
 		//ImagePlus newPolar1 = transformer.getNomalSurfacesFromInt(volume, volume.getCenterMass(0, 0), 0, 0, 1, 130);
 			//ImagePlus polar = transformer.fastToPolar(volume, new Point3D(225,225,200), 1, true);
 			//polar.getProcessor().resetMinAndMax();
-		//polar.show();
+		polar.show();
 		newPolar.show();
 		//newPolar1.show();
 		
