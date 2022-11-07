@@ -1,3 +1,9 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.PlugIn;
@@ -163,6 +169,9 @@ public class PolarTransformer implements PlugIn {
 
 		ImagePlus impTransform = IJ.createHyperStack("follow normal volume", 360, 181, 1, 5, 1, 32);
 		
+		ArrayList<double[]> arrListPoints = new ArrayList<double[]>();
+		ArrayList<double[]> arrListNorms = new ArrayList<double[]>();
+		
 		for (int betaInt = 0; betaInt < 181; betaInt++) {
 			double beta = (betaInt / 360.0) * Math.PI * 2.0;
 			for (int alphaInt = 0; alphaInt < 360; alphaInt++) {
@@ -183,10 +192,15 @@ public class PolarTransformer implements PlugIn {
 							direction[1] = d[1]/sum;
 							direction[2] = d[2]/sum;
 							
+							arrListNorms.add(direction);
+							
 							
 							double x = targetCenter.x + r * Math.cos(alpha) * Math.sin(beta);
 							double y = targetCenter.y + r * Math.sin(alpha) * Math.sin(beta);
 							double z = targetCenter.z + r * Math.cos(beta);
+							
+							
+							arrListPoints.add(new double[] {x,y,z});
 							
 							//if check space limitation
 							
@@ -207,6 +221,40 @@ public class PolarTransformer implements PlugIn {
 		}
 		
 		return impTransform;
+		
+	}
+	
+	
+	public void saveCSV(String filename, ArrayList<double[]> points, ArrayList<double[]> norms) {
+		
+		if (filename == null) {
+			return;
+		}
+		File file = new File(filename);
+		//try {
+		//BufferedWriter buffer = new BufferedWriter(new FileWriter(file));
+		//int nrows = points.size();
+		int ncols = 3;
+			//String row = "";
+​
+			/*for (int r = 0; r < nrows; r++) {
+				row = "";
+				for (int c = 0; c < ncols; c++)
+					row += points.get(r)[c] + (c == ncols - 1 ? "" : ", ");
+				buffer.write(row + "\n");
+			}
+
+			for (int r = 0; r < nrows; r++) {
+				row = "";
+				for (int c = 0; c < ncols; c++)
+					row += norms.get(r)[c] + (c == ncols - 1 ? "" : ", ");
+				buffer.write(row + "\n");
+			}
+
+			buffer.close();
+		//}
+		//catch (IOException ex) {
+		//}*/
 		
 	}
 	
