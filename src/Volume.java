@@ -60,7 +60,8 @@ public class Volume implements PlugIn {
 					for (int x = 0; x < nx; x++) {
 						for (int y = 0; y < ny; y++) {
 
-							ip.putPixelValue(x, y, image[x + nx * (y + ny * ((z - 1) + nz * ((t - 1) + (c - 1) * nt)))]);
+							ip.putPixelValue(x, y,
+									image[x + nx * (y + ny * ((z - 1) + nz * ((t - 1) + (c - 1) * nt)))]);
 
 						}
 					}
@@ -139,11 +140,11 @@ public class Volume implements PlugIn {
 
 		int idx = x + y * nx + z * nx * ny + t * nx * ny * nz + c * nx * ny * nz * nt;
 
-		//if (x >= nx || y >= ny || z >= nz || t >= nt || c >= nc || x < 0 || y < 0 || z < 0 || t < 0 || c < 0) {
-			//return 0;
-		//} else {
-		return image[idx];
-		//}
+		if (x >= nx || y >= ny || z >= nz || t >= nt || c >= nc || x < 0 || y < 0 || z < 0 || t < 0 || c < 0) {
+			return 0;
+		} else {
+			return image[idx];
+		}
 	}
 
 	public double getInterpolatedPixel(double x, double y, double z, int t, int c) {
@@ -151,8 +152,9 @@ public class Volume implements PlugIn {
 		int xFloor = (int) Math.floor(x);
 		int yFloor = (int) Math.floor(y);
 		int zFloor = (int) Math.floor(z);
-		
-		if ((xFloor+1) >= nx || (yFloor+1) >= ny || (zFloor+1) >= nz || t >= nt || c >= nc || xFloor < 0 || yFloor < 0 || zFloor < 0 || t < 0 || c < 0) {
+
+		if (xFloor + 1 >= nx || yFloor + 1 >= ny || zFloor + 1 >= nz || t >= nt || c >= nc || xFloor < 0 || yFloor < 0
+				|| zFloor < 0 || t < 0 || c < 0) {
 			return 0;
 		}
 
@@ -186,7 +188,7 @@ public class Volume implements PlugIn {
 		return result;
 	}
 
-	public double[] getDerivatives(Point3D centerMass, int r, double alpha, double beta, int t, int c, double step) {
+	public double[] getDerivatives(Point3D centerMass, double r, double alpha, double beta, int t, int c, double step) {
 
 		double xx = r * Math.cos(alpha) * Math.sin(beta);
 		double yy = r * Math.sin(alpha) * Math.sin(beta);
@@ -197,19 +199,28 @@ public class Volume implements PlugIn {
 		int y = (int) (yy + centerMass.y);
 		int z = (int) (zz + centerMass.z);
 
+		double[] derivative = new double[3];
+
+		if (x >= nx || y >= ny || z >= nz || t >= nt || c >= nc || x <= 0 || y <= 0 || z <= 0 || t < 0 || c < 0) {
+
+			derivative[0] = 0;
+			derivative[1] = 0;
+			derivative[2] = 0;
+
+			return derivative;
+		}
+
 		double dx = getPixel(x + 1, y, z, t, c) - getPixel(x - 1, y, z, t, c);
 		double dy = getPixel(x, y + 1, z, t, c) - getPixel(x, y - 1, z, t, c);
 		double dz = getPixel(x, y, z + 1, t, c) - getPixel(x, y, z - 1, t, c);
-
-		double[] derivative = new double[3];
 
 		derivative[0] = dx;
 		derivative[1] = dy;
 		derivative[2] = dz;
 
-		//if (alpha == 0 && beta == Math.PI) {
-		//IJ.log("x" + x + "y" + y + "z" + z + "dx" + dx + "dy" + dy + "dz" + dz);
-		//}
+		// if (alpha == 0 && beta == Math.PI) {
+		// IJ.log("x" + x + "y" + y + "z" + z + "dx" + dx + "dy" + dy + "dz" + dz);
+		// }
 
 		return derivative;
 	}
