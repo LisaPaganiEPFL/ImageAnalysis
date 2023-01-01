@@ -147,6 +147,21 @@ public class Volume implements PlugIn {
 		}
 	}
 
+	public void setPixel(int x, int y, int z, int t, int c, double pixel) {
+
+		int idx = x + y * nx + z * nx * ny + t * nx * ny * nz + c * nx * ny * nz * nt;
+
+		if (x >= nx || y >= ny || z >= nz || t >= nt || c >= nc || x < 0 || y < 0 || z < 0 || t < 0 || c < 0) {
+			return;
+		} else {
+			
+			image[idx] = pixel;
+
+			return;
+		}
+
+	}
+
 	public double getInterpolatedPixel(double x, double y, double z, int t, int c) {
 
 		int xFloor = (int) Math.floor(x);
@@ -201,12 +216,51 @@ public class Volume implements PlugIn {
 
 		double[] derivative = new double[3];
 
-		if (x >= nx || y >= ny || z >= nz || t >= nt || c >= nc || x <= 0 || y <= 0 || z <= 0 || t < 0 || c < 0) {
+		if (x >= nx || y >= ny || z >= nz || t >= nt || c >= nc || x < 0 || y < 0 || z < 0 || t < 0 || c < 0) {
 
 			derivative[0] = 0;
 			derivative[1] = 0;
 			derivative[2] = 0;
 
+			return derivative;
+		}
+		
+		if (x == (nx - 1)) {
+			derivative[0] = -1;
+			derivative[1] = 0;
+			derivative[2] = 0;
+			return derivative;
+		}
+		if (x == 0) {
+			derivative[0] = 1;
+			derivative[1] = 0;
+			derivative[2] = 0;
+			return derivative;
+		}
+		
+		if (y == (ny - 1)) {
+			derivative[0] = 0;
+			derivative[1] = -1;
+			derivative[2] = 0;
+			return derivative;
+		}
+		if (y == 0) {
+			derivative[0] = 0;
+			derivative[1] = 1;
+			derivative[2] = 0;
+			return derivative;
+		}
+		
+		if (z == (nz - 1)) {
+			derivative[0] = 0;
+			derivative[1] = 0;
+			derivative[2] = -1;
+			return derivative;
+		}
+		if (z == 0) {
+			derivative[0] = 0;
+			derivative[1] = 0;
+			derivative[2] = 1;
 			return derivative;
 		}
 

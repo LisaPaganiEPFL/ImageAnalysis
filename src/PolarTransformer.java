@@ -155,7 +155,7 @@ public class PolarTransformer implements PlugIn {
 			for (int z = 1; z <= inCopy.getNSlices(); z++) {
 				inCopy.setPositionWithoutUpdate(1, z, t);
 				ImageProcessor ip = inCopy.getProcessor();
-				rf.rank(ip, 2, RankFilters.MEDIAN);
+				rf.rank(ip, 3, RankFilters.MEDIAN);
 			}
 		}
 
@@ -365,10 +365,19 @@ public class PolarTransformer implements PlugIn {
 	public ImagePlus getFollowNomalSurfacesMedian(Volume volume, Point3D targetCenter, int t, int c, double step,
 			double threshold) {
 
-		ImagePlus impTransform = IJ.createHyperStack("follow normal volume", 360, 181, 1, 5, 1, 32);
+		//ImagePlus impTransform = IJ.createHyperStack("follow normal volume", 360, 181, 1, 5, 1, 32);
 		ImagePlus impRadius = IJ.createHyperStack("radius", 360, 181, 1, 1, 1, 32);
+		ImagePlus impX = IJ.createHyperStack("radius", 360, 181, 1, 1, 1, 32);
+		ImagePlus impY = IJ.createHyperStack("radius", 360, 181, 1, 1, 1, 32);
+		ImagePlus impZ = IJ.createHyperStack("radius", 360, 181, 1, 1, 1, 32);
 		impRadius.setPositionWithoutUpdate(1, 1, 1);
 		ImageProcessor ipRadius = impRadius.getProcessor();
+		impX.setPositionWithoutUpdate(1, 1, 1);
+		ImageProcessor ipX = impX.getProcessor();
+		impY.setPositionWithoutUpdate(1, 1, 1);
+		ImageProcessor ipY = impY.getProcessor();
+		impRadius.setPositionWithoutUpdate(1, 1, 1);
+		ImageProcessor ipZ = impZ.getProcessor();
 
 
 		for (int betaInt = 0; betaInt < 181; betaInt++) {
@@ -376,7 +385,7 @@ public class PolarTransformer implements PlugIn {
 			for (int alphaInt = 0; alphaInt < 360; alphaInt++) {
 
 				double alpha = (alphaInt / 180.0) * Math.PI;
-				for (int r = getRadius(volume, targetCenter, step) + 5; r >= 1; r--) {
+				for (int r = getRadius(volume, targetCenter, step) + 5; r >= 2; r--) {
 
 					double newValue = getInterpolatedValue(volume, targetCenter, r, alpha, beta, step, t, c);
 					// IJ.log("pixel"+newValue);
@@ -447,10 +456,15 @@ public class PolarTransformer implements PlugIn {
 				double alpha = (alphaInt / 180.0) * Math.PI;
 				double r = ipMedianRadius.getPixelValue(alphaInt, betaInt);
 				//IJ.log("r: " + r);
+				
+				
 						
 				double x = targetCenter.x + r * Math.cos(alpha) * Math.sin(beta);
 				double y = targetCenter.y + r * Math.sin(alpha) * Math.sin(beta);
 				double z = targetCenter.z * step + r * Math.cos(beta);
+				
+				
+				volume.setPixel((int) x, (int) y, (int) (z/step), t, c, 70000000);
 				
 				arrListPoints.add(new double[] { x, y, z });
 				
@@ -469,9 +483,12 @@ public class PolarTransformer implements PlugIn {
 					direction[2] = 0;
 				}
 				
-				arrListNorms.add(direction);
+				//arrListNorms.add(direction);
+				ipX.putPixelValue(alphaInt, betaInt, direction[0]);
+				ipY.putPixelValue(alphaInt, betaInt, direction[1]);
+				ipZ.putPixelValue(alphaInt, betaInt, direction[2]);
 				
-				/*for (int rPos = 0; rPos < 5; rPos++) { // rNormal
+					/*for (int rPos = 0; rPos < 5; rPos++) { // rNormal
 					 //double nValue = getInterpolatedValue(volume, x, y, z, direction, rPos, step,
 					 //t, c);
 					double nValue = getInterpolatedValue(volume, targetCenter, r - rPos, alpha, beta, step, t, c);
@@ -483,18 +500,48 @@ public class PolarTransformer implements PlugIn {
 				
 			}
 		}
+		
+		ImagePlus impMedianX = median(impX);
+		//ImagePlus impMedianRadius = impRadius;
+		GaussianBlur3D.blur(impMedianX, 3, 3, 0);
+		impX.setPositionWithoutUpdate(1, 1, 1);
+		ImageProcessor ipMedianX = impMedianX.getProcessor();
+		//impMedianX.show();
+		
+		ImagePlus impMedianY = median(impY);
+		//ImagePlus impMedianRadius = impRadius;
+		GaussianBlur3D.blur(impMedianY, 3, 3, 0);
+		impY.setPositionWithoutUpdate(1, 1, 1);
+		ImageProcessor ipMedianY = impMedianY.getProcessor();
+		//impMedianY.show();
+		
+		ImagePlus impMedianZ = median(impZ);
+		//ImagePlus impMedianRadius = impRadius;
+		GaussianBlur3D.blur(impMedianZ, 3, 3, 0);
+		impX.setPositionWithoutUpdate(1, 1, 1);
+		ImageProcessor ipMedianZ = impMedianZ.getProcessor();
+		//impMedianZ.show();
+		
+		for (int betaInt = 0; betaInt < 181; betaInt++) {
+			for (int alphaInt = 0; alphaInt < 360; alphaInt++) {
+				
+				arrListNorms.add(new double[] {ipX.getPixelValue(alphaInt, betaInt),ipY.getPixelValue(alphaInt, betaInt),ipZ.getPixelValue(alphaInt, betaInt) });
+				
+			}
+		}
+		
 
 		//logParaview(arrListPoints, arrListNorms);
-		saveCSV("pointMedianGaussian.cvs", arrListPoints, 3);
-		saveCSV("normMedianGaussian.cvs", arrListNorms, 3);
-		saveCSV("angleMedianGaussian.cvs", arrListAngles, 2);
+		saveCSV("pointMedianGaussian6.cvs", arrListPoints, 3);
+		saveCSV("normMedianGaussianSmooth6.cvs", arrListNorms, 3);
+		saveCSV("angleMedianGaussian6.cvs", arrListAngles, 2);
 
 		// String currentDir = System.getProperty("user.dir");
 		// IJ.log("Current dir using System:" + currentDir);
 		impRadius.show();
 		impMedianRadius.show();
-		return impTransform;
-		//return impRadius;
+		//return impTransform;
+		return volume.getVolume();
 
 	}
 	
@@ -604,7 +651,7 @@ public class PolarTransformer implements PlugIn {
 
 	public ImagePlus getNomalSurfacesFromLoad(Volume volume, int t, int c, double step) {
 
-		ImagePlus impTransform = IJ.createHyperStack("normal volume from load files", 360, 181, 1, 40, 1, 32);
+		ImagePlus impTransform = IJ.createHyperStack("normal volume from load files", 360, 181, 1, 10, 1, 32);
 		
 		for (int pos = 0; pos < arrListPoints.size(); pos++) {
 			double[] p = arrListPoints.get(pos);
@@ -621,13 +668,66 @@ public class PolarTransformer implements PlugIn {
 			int betaInt = (int) angles[0];
 			int alphaInt = (int) angles[1];
 			
-			for (int i=-20; i < 20; i++) {
+			//Follow radius
+			
+			//n[0] = Math.cos(angles[1]) * Math.sin(angles[0]);
+			//n[1] = Math.sin(angles[1]) * Math.sin(angles[0]);
+			//n[2] = Math.cos(angles[0]);
+			
+			for (int i=-5; i < 5; i++) {
 				double nValue = getInterpolatedValue(volume, x, y, z, n, i, step, t, c);
-				impTransform.setPositionWithoutUpdate(1, i + 1, 1);
+				impTransform.setPositionWithoutUpdate(1, i + 1 + 5, 1);
 				ImageProcessor ipTransform = impTransform.getProcessor();
 				ipTransform.putPixelValue(alphaInt, betaInt, nValue);
 			}
 		}
+
+		return impTransform;
+
+	}
+	
+	public ImagePlus getNomalSurfacesFromLoadMulti(Volume volume, double step) {
+
+		ImagePlus impTransform = IJ.createHyperStack("normal volume from load files", 360, 181, volume.nc, 10, volume.nt, 32);
+		ImagePlus impTransformMax = IJ.createHyperStack("normal volume from load files", 360, 181, volume.nc, 1, volume.nt, 32);
+		
+		for(int c = 1; c <= volume.nc; c++) {
+			for(int t = 1; t <= volume.nt; t++) {
+				impTransformMax.setPositionWithoutUpdate(c, 1, t);
+				ImageProcessor ipTransformMax = impTransformMax.getProcessor();
+				for (int pos = 0; pos < arrListPoints.size(); pos++) {
+					double[] p = arrListPoints.get(pos);
+					double[] n = arrListNorms.get(pos);
+					
+					double[] angles = arrListAngles.get(pos);
+					
+					double x = p[0];
+					double y = p[1];
+					double z = p[2];
+					int betaInt = (int) angles[0];
+					int alphaInt = (int) angles[1];
+					
+					double value = 0;
+					
+					for (int i=-5; i < 5; i++) {
+						double nValue = getInterpolatedValue(volume, x, y, z, n, i, step, t-1, c-1);
+						if(nValue > value) {
+							value = nValue;
+						}
+						impTransform.setPositionWithoutUpdate(c, i + 1 + 5, t);
+						ImageProcessor ipTransform = impTransform.getProcessor();
+						ipTransform.putPixelValue(alphaInt, betaInt, nValue);
+					}
+					
+					
+					ipTransformMax.putPixelValue(alphaInt, betaInt, value);
+					
+					
+				}
+			}
+		}
+		
+		impTransformMax.show();
 
 		return impTransform;
 
