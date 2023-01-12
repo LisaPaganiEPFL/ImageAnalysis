@@ -77,21 +77,21 @@ public class Experiments implements PlugIn{
 		PolarTransformer transformer = new PolarTransformer();
 		
 		
-		/*transformer.arrListNorms = transformer.loadCSV("../imagej-space/normMedianGaussianSmooth6.cvs",3);
+		transformer.arrListNorms = transformer.loadCSV("../imagej-space/normMedianGaussianSmooth6.cvs",3);
 		transformer.arrListPoints = transformer.loadCSV("../imagej-space/pointMedianGaussian6.cvs",3);
 		transformer.arrListAngles = transformer.loadCSV("../imagej-space/angleMedianGaussian6.cvs",2);
 		Volume volume1 = new Volume(in);
 		//ImagePlus color = transformer.getNomalSurfacesFromLoad(volume1, 0, 0, 3.41);
 		ImagePlus color = transformer.getNomalSurfacesFromLoadMulti(volume1, 3.41);
-		color.show();*/
+		color.show();
 		
-		Volume volume = new Volume(in);
+		//Volume volume = new Volume(in);
 		//ImagePlus polar = transformer.getNomalSurfaces(volume, volume.getCenterMass(0, 0), 0, 0, 2.3, 6000);
 		//ImagePlus polar = transformer.getNomalSurfaces(volume, volume.getCenterMass(0, 0), 0, 0, 1, 130);
 		
 		//transformer.sphere(volume1, volume1.getCenterMass(0, 0), 0, 0, 3.41);
 		//IJ.log("center: " + volume.getCenterMass(0, 0).x + volume.getCenterMass(0, 0).y  + volume.getCenterMass(0, 0).z );
-		ImagePlus newPolar = transformer.getFollowNomalSurfacesMedian(volume, volume.getCenterMass(0, 0), 0, 0, 3.41, 200000);
+		//ImagePlus newPolar = transformer.getFollowNomalSurfacesMedian(volume, volume.getCenterMass(0, 0), 0, 0, 3.41, 200000);
 		//ImagePlus polar = transformer.fastToPolar(volume1, new Point3D(225,225,200), 3.41, true);
 
 		//polar.show();
@@ -99,7 +99,7 @@ public class Experiments implements PlugIn{
 			//ImagePlus polar = transformer.fastToPolar(volume, new Point3D(225,225,200), 1, true);
 			//polar.getProcessor().resetMinAndMax();
 		//polar.show();
-		newPolar.show();
+		//newPolar.show();
 		//newPolar1.show();
 		
 		/*PolarTransformer transformer = new PolarTransformer();
