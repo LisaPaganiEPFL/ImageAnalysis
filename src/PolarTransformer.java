@@ -688,7 +688,7 @@ public class PolarTransformer implements PlugIn {
 
 	}
 	
-	public ImagePlus getNomalSurfacesFromLoadMulti(Volume volume, double step) {
+	public ImagePlus getNomalSurfacesFromLoadMulti(Volume volume, double step, int internalThickness, int externalThickness) {
 
 		ImagePlus impTransform = IJ.createHyperStack("normal volume from load files", 360, 181, volume.nc, 10, volume.nt, 32);
 		ImagePlus impTransformMax = IJ.createHyperStack("normal volume from load files", 360, 181, volume.nc, 1, volume.nt, 32);
@@ -711,12 +711,12 @@ public class PolarTransformer implements PlugIn {
 					
 					double value = 0;
 					
-					for (int i=-5; i < 5; i++) {
+					for (int i=-internalThickness; i < externalThickness; i++) {
 						double nValue = getInterpolatedValue(volume, x, y, z, n, i, step, t-1, c-1);
 						if(nValue > value) {
 							value = nValue;
 						}
-						impTransform.setPositionWithoutUpdate(c, i + 1 + 5, t);
+						impTransform.setPositionWithoutUpdate(c, i + 1 + internalThickness, t);
 						ImageProcessor ipTransform = impTransform.getProcessor();
 						ipTransform.putPixelValue(alphaInt, betaInt, nValue);
 					}
