@@ -451,6 +451,8 @@ public class PolarTransformer implements PlugIn {
 		
 		for (int betaInt = 0; betaInt < 181; betaInt++) {
 			double beta = (betaInt / 180.0) * Math.PI;
+			double sin = Math.sin(beta);
+			double cos = Math.cos(beta);
 			for (int alphaInt = 0; alphaInt < 360; alphaInt++) {
 
 				double alpha = (alphaInt / 180.0) * Math.PI;
@@ -459,9 +461,9 @@ public class PolarTransformer implements PlugIn {
 				
 				
 						
-				double x = targetCenter.x + r * Math.cos(alpha) * Math.sin(beta);
-				double y = targetCenter.y + r * Math.sin(alpha) * Math.sin(beta);
-				double z = targetCenter.z * step + r * Math.cos(beta);
+				double x = targetCenter.x + r * Math.cos(alpha) * sin;
+				double y = targetCenter.y + r * Math.sin(alpha) * sin;
+				double z = targetCenter.z * step + r * cos;
 				
 				
 				volume.setPixel((int) x, (int) y, (int) (z/step), t, c, 70000000);
