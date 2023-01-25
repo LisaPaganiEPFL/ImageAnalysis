@@ -3,7 +3,7 @@ Application on the C.Elegans embryo in 3D + T in fluorescence microscopy
 
 Read the details of the project in this [report](https://it.overleaf.com/read/hwmbhfzbmysp).
 
-## Repository content
+## Repository main content
 
 - [`Membrane_Development.jar`](https://github.com/LisaPaganiEPFL/ImageAnalysis/blob/main/Membrane_Development.jar) final result to be used in combination with ImageJ.
 - [`src`](https://github.com/LisaPaganiEPFL/ImageAnalysis/tree/main/src) folder contains all the classes used for the project.
