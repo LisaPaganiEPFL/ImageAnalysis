@@ -47,6 +47,7 @@ public void run(String arg) {
 		PolarTransformer transformer = new PolarTransformer();
 		ImagePlus newPolar = transformer.getFollowNomalSurfacesMedian(volume, new Point3D(xc,yc,zc), 0, 0, a, t);
 		
+		//IJ.show 
 	}
 
 }

@@ -91,7 +91,7 @@ public class Experiments implements PlugIn{
 		
 		//transformer.sphere(volume1, volume1.getCenterMass(0, 0), 0, 0, 3.41);
 		//IJ.log("center: " + volume.getCenterMass(0, 0).x + volume.getCenterMass(0, 0).y  + volume.getCenterMass(0, 0).z );
-		//ImagePlus newPolar = transformer.getFollowNomalSurfacesMedian(volume, volume.getCenterMass(0, 0), 0, 0, 3.41, 200000);
+		ImagePlus newPolar = transformer.getFollowNomalSurfacesMedian(volume, volume.getCenterMass(0, 0), 0, 0, 3.41, 200000);
 		//ImagePlus polar = transformer.fastToPolar(volume1, new Point3D(225,225,200), 3.41, true);
 
 		//polar.show();

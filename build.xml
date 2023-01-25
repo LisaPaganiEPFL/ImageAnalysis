@@ -1,6 +1,6 @@
 <project name="LabImmersion_2022" default="" basedir=".">
     <description>
-    	BioImageInformatics_2022 build file
+    	Membrane_Development build file
     </description>
   
 	<property name="src" location="src" />
@@ -9,21 +9,21 @@
  
 	 <property name="pluginsDir"  location="$basedir/../../imagej-space/plugins/" />
  
-  <property name="user.name" value="Benjamin Gallusser" />
+  <property name="user.name" value="Lisa Pagani" />
 <target name="main" depends="compress" description="Main target">
 	<echo>
 		Building the .jar file.
 	</echo>
 </target>
  <target name="compress" depends="" description="generate the distribution">
- 	<jar jarfile="BioImageInformatics_2022.jar">
+ 	<jar jarfile="Membrane_Development.jar">
  		<fileset dir="." includes="plugins.config" />
 		<fileset dir="${build}" includes="**/*.*" />
  		
  		<manifest>
- 		 	 	      <attribute name="Built-By" value="Benjamin Gallusser @ EPFL"/>
+ 		 	 	      <attribute name="Built-By" value="Lisa Pagani @ EPFL"/>
  		</manifest>
  	</jar>
-    <copy file="BioImageInformatics_2022.jar" toDir="${pluginsDir}" />
+    <copy file="Membrane_Development.jar" toDir="${pluginsDir}" />
   </target>
 </project>
