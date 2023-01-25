@@ -10,7 +10,7 @@ public class Apply_Transformation implements PlugIn{
 		
 		ImagePlus imp = IJ.getImage().duplicate();
 
-		GenericDialog dlg = new GenericDialog("Denoising");
+		GenericDialog dlg = new GenericDialog("Apply Transformation");
 		dlg.addNumericField("Anisotropic factor", 3.41, 2);
 		dlg.addNumericField("Internal thickness", 5, 0);
 		dlg.addNumericField("External thickness", 5, 0);
