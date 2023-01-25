@@ -540,8 +540,8 @@ public class PolarTransformer implements PlugIn {
 
 		// String currentDir = System.getProperty("user.dir");
 		// IJ.log("Current dir using System:" + currentDir);
-		impRadius.show();
-		impMedianRadius.show();
+		//impRadius.show();
+		//impMedianRadius.show();
 		//return impTransform;
 		return volume.getVolume();
 
@@ -690,8 +690,8 @@ public class PolarTransformer implements PlugIn {
 	
 	public ImagePlus getNomalSurfacesFromLoadMulti(Volume volume, double step, int internalThickness, int externalThickness) {
 
-		ImagePlus impTransform = IJ.createHyperStack("normal volume from load files", 360, 181, volume.nc, 10, volume.nt, 32);
-		ImagePlus impTransformMax = IJ.createHyperStack("normal volume from load files", 360, 181, volume.nc, 1, volume.nt, 32);
+		ImagePlus impTransform = IJ.createHyperStack("Spherical transformation", 360, 181, volume.nc, internalThickness + externalThickness , volume.nt, 32);
+		ImagePlus impTransformMax = IJ.createHyperStack("Arg max projection", 360, 181, volume.nc, 1, volume.nt, 32);
 		
 		for(int c = 1; c <= volume.nc; c++) {
 			for(int t = 1; t <= volume.nt; t++) {

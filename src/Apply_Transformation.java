@@ -33,6 +33,8 @@ public class Apply_Transformation implements PlugIn{
 		ImagePlus color = transformer.getNomalSurfacesFromLoadMulti(volume, a, it, et);
 		color.show();
 		
+		IJ.showMessage("Transformaion completed");
+		
 	}
 
 }
