@@ -10,7 +10,7 @@ Read the details of the project in this [report](https://it.overleaf.com/read/hw
 
 ## Classes
 
-There are a total of 5 classes in the src folder. Here, there is a short description.
+There are a total of 6 classes in the src folder. Here, there is a short description.
 
 - [`Point3D.java`](https://github.com/LisaPaganiEPFL/ImageAnalysis/blob/main/src/Point3D.java) defines a 3D object with integer values. In this project is used for the volume pixel coordinates.
 - [`Volume.java`](https://github.com/LisaPaganiEPFL/ImageAnalysis/blob/main/src/Volume.java) converts a ImagePlus image into an array.
